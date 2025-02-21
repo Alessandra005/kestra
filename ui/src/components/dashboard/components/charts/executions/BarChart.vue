@@ -1,26 +1,28 @@
 <template>
-    <el-tooltip
-        effect="light"
-        placement="left"
-        :persistent="false"
-        :hide-after="0"
-        transition=""
-        :popper-class="tooltipContent === '' ? 'd-none' : 'tooltip-stats'"
-        :disabled="!externalTooltip"
-        :content="tooltipContent"
-        raw-content
-    >
-        <div>
-            <Bar
-                :class="small ? 'small' : ''"
-                :data="parsedData"
-                :options="options"
-                :total="total"
-                :plugins="plugins"
-                :duration="duration"
-            />
-        </div>
-    </el-tooltip>
+    <div class="chart-container">
+        <el-tooltip
+            effect="light"
+            placement="left"
+            :persistent="false"
+            :hide-after="0"
+            transition=""
+            :popper-class="tooltipContent === '' ? 'd-none' : 'tooltip-stats'"
+            :disabled="!externalTooltip"
+            :content="tooltipContent"
+            raw-content
+        >
+            <div class="chart-wrapper">
+                <Bar
+                    :class="small ? 'small' : ''"
+                    :data="parsedData"
+                    :options="options"
+                    :total="total"
+                    :plugins="plugins"
+                    :duration="duration"
+                />
+            </div>
+        </el-tooltip>
+    </div>
 </template>
 
 <script setup>
@@ -78,7 +80,7 @@
             Object.keys(value.executionCounts).forEach(function (state) {
                 if (accumulator[state] === undefined) {
                     accumulator[state] = {
-                        label: state,
+                        label: index < 4 ? state : "Other",
                         backgroundColor: scheme.value[state],
                         yAxisID: "y",
                         data: [],
@@ -126,12 +128,19 @@
             borderColor: "transparent",
             borderWidth: 2,
             plugins: {
+                legend:{ //size to 10px
+                    labels:{
+                        font:{
+                            size:10,
+                        }
+                    }
+                }
                 barLegend: {
                     containerID: "executions",
                 },
                 tooltip: {
                     enabled: !props.externalTooltip,
-                    filter: (value) => value.raw,
+                    filter: (value) => value.raw  !== undefined && value.raw !== null, 
                     callbacks: {
                         label: function (value) {
                             const {label, yAxisID} = value.dataset;
@@ -238,4 +247,35 @@
 .small{
     height: 40px;
 }
+
+    
+.chart-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;    
+    overflow-x: auto;
+    width: 100%;
+}
+.chart-container::-webkit-scrollbar {
+    height: 8px;
+}
+.chart-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+.chart-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.chart-wrapper {
+    flex: 1 1 100%;
+    min-width: 0; 
+    max-width: 100%;
+}
+@media (min-width: 768px) {
+    .chart-wrapper {
+        flex: 1 1 100%;
+    }
+}
+    
 </style>
