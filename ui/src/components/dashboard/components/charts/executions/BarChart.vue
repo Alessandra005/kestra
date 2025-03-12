@@ -80,7 +80,7 @@
 
     const parsedData = computed(() => {
         let datasets = props.data.reduce(function (accumulator, value) {
-            Object.keys(value.executionCounts).forEach(function (state) {
+            Object.keys(value.executionCounts).forEach(function (state, index) {
                 if (accumulator[state] === undefined) {
                     accumulator[state] = {
                         label: index < 4 ? state : "Other",
