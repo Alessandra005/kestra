@@ -138,9 +138,9 @@
                     labels:{
                         font:{
                             size:10,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
                 barLegend: {
                     containerID: "executions",
                 },
